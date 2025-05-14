@@ -3,7 +3,9 @@
 This application is an API gateway for three Yr APIs:
 1. https://www.yr.no/api/v0/regions returning countries with their IDs
 2. https://www.yr.no/api/v0/regions/{countryId} returning regions by country ID
-3. https://www.yr.no/api/v0/regions/{regionId}/watertemperatures returning water temperatures in a region by region ID 
+3. https://www.yr.no/api/v0/regions/{regionId}/watertemperatures returning water temperatures in a region by region ID
+   
+The task for a developer was to implement a new API endpoint that would return the warmest water temperature for given regions using yr.no's open APIs.
 
 The goal of the exercise is to perform review of this code. Would you merge it as is? Would you request changes?
 
