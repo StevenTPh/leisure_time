@@ -15,7 +15,7 @@ public class WaterTemperatureService {
     @Autowired
     private YrClient yrClient;
 
-    public BeachInfo findWarmestWaterTemperatureInNorway(List<String> regions) {
+    public List<BeachInfo> findWarmestWaterTemperaturePerRegion(List<String> regions) {
         if (regions == null || regions.isEmpty()) {
             throw new IllegalArgumentException("Regions list cannot be null or empty");
         }
@@ -23,19 +23,26 @@ public class WaterTemperatureService {
         List<String> regionIds = getRegionsIds(regions);
         List<WaterTemperatureResponseDTO> waterTemperatures = getWaterTemperatures(regionIds);
 
-        //find the warmest water temperature
-        WaterTemperatureResponseDTO warmestWaterTemperature = waterTemperatures.stream()
-                .max((temp1, temp2) -> Double.compare(temp1.getTemperature(), temp2.getTemperature()))
-                .orElse(null);
+        List<BeachInfo> warmestWaterPerRegion = waterTemperatures.stream()
+                .collect(Collectors.groupingBy(temp -> temp.getLocation().getRegion())) // Grupper etter fylke
+                .entrySet()
+                .stream()
+                .map(entry -> entry.getValue().stream()
+                        .max((temp1, temp2) -> Double.compare(temp1.getTemperature(), temp2.getTemperature()))
+                        .orElse(null))
+                .map(warmest -> BeachInfo.builder()
+                        .regionName(warmest.getLocation().getRegion().getName())
+                        .beachName(warmest.getLocation().getName())
+                        .waterTemperature(warmest.getTemperature())
+                        .build())
+                .collect(Collectors.toList());
 
-        return BeachInfo.builder()
-                .beachName(warmestWaterTemperature.getLocation().getName())
-                .waterTemperature(warmestWaterTemperature.getTemperature())
-                .build();
+        return warmestWaterPerRegion;
     }
 
     private List<String> getRegionsIds(List<String> regions) {
         RegionsResponseDTO response = yrClient.getRegions();
+        System.out.println(response);
         if (response == null || response.getRegions() == null) {
             throw new IllegalStateException("Failed to fetch regions");
         }

@@ -6,6 +6,7 @@ import lombok.Data;
 @Builder
 @Data
 public class BeachInfo {
+    private String regionName;
     private String beachName;
     private Double waterTemperature;
 }
