@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +22,7 @@ public class WaterTemperatureService {
         }
 
         List<String> regionIds = getRegionsIds(regions);
+        System.out.println(regionIds);
         List<WaterTemperatureResponseDTO> waterTemperatures = getWaterTemperatures(regionIds);
 
         List<BeachInfo> warmestWaterPerRegion = waterTemperatures.stream()
@@ -42,13 +44,17 @@ public class WaterTemperatureService {
 
     private List<String> getRegionsIds(List<String> regions) {
         RegionsResponseDTO response = yrClient.getRegions();
-        System.out.println(response);
         if (response == null || response.getRegions() == null) {
             throw new IllegalStateException("Failed to fetch regions");
         }
 
+        // fjerner case sensitvititet
+        List<String> regionNamesLower = regions.stream()
+                .map(String::toLowerCase)
+                .toList();
+
         return response.getRegions().stream()
-                .filter(region -> regions.contains(region.getName())) // Match by name
+                .filter(region -> regionNamesLower.contains(region.getName().toLowerCase())) // Match by name
                 .map(region -> region.getId())
                 .collect(Collectors.toList());
     }
