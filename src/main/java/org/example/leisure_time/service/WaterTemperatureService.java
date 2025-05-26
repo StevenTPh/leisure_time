@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,7 +15,7 @@ public class WaterTemperatureService {
     @Autowired
     private YrClient yrClient;
 
-    public List<BeachInfo> findWarmestWaterTemperaturePerRegion(List<String> regions) {
+    public List<BeachInfo> findWarmestWaterTemperatureInNorway(List<String> regions) {
         if (regions == null || regions.isEmpty()) {
             throw new IllegalArgumentException("Regions list cannot be null or empty");
         }
