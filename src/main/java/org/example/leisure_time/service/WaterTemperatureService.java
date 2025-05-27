@@ -50,11 +50,11 @@ public class WaterTemperatureService {
 
         // fjerner case sensitvititet
         List<String> regionNamesLower = regions.stream()
-                .map(String::toLowerCase)
+                .map(r -> r.toLowerCase())
                 .toList();
 
         return response.getRegions().stream()
-                .filter(region -> regionNamesLower.contains(region.getName().toLowerCase())) // Match by name
+                .filter(region -> regionNamesLower.contains(region.getName().toLowerCase()))
                 .map(region -> region.getId())
                 .collect(Collectors.toList());
     }
