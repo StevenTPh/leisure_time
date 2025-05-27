@@ -22,6 +22,6 @@ public class WaterTemperatureController {
 
     @GetMapping("/warmest")
     public List<BeachInfo> findWarmestWaterTemperatureInNorway(@RequestParam List<String> regions) {
-        return waterTemperatureService.findWarmestWaterTemperaturePerRegion(regions);
+        return waterTemperatureService.findWarmestWaterTemperatureInNorway(regions);
     }
 }
